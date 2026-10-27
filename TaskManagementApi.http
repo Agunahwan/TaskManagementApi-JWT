@@ -1,0 +1,49 @@
+@TaskManagementApi_HostAddress = http://localhost:5180
+@token = paste-access-token-here
+
+### 1. Login and copy accessToken from the response
+POST {{TaskManagementApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "demo",
+  "password": "Demo123!"
+}
+
+### 2. This request should return 401 when no valid token is supplied
+GET {{TaskManagementApi_HostAddress}}/api/tasks
+Accept: application/json
+
+### 3. Get all tasks (replace @token with the token from login)
+GET {{TaskManagementApi_HostAddress}}/api/tasks
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### 4. Get one task by ID
+GET {{TaskManagementApi_HostAddress}}/api/tasks/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### 5. Create a task
+POST {{TaskManagementApi_HostAddress}}/api/tasks
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Learn JWT Authentication",
+  "isCompleted": false
+}
+
+### 6. Update a task
+PUT {{TaskManagementApi_HostAddress}}/api/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Learn JWT Authentication and EF Core",
+  "isCompleted": true
+}
+
+### 7. Delete a task
+DELETE {{TaskManagementApi_HostAddress}}/api/tasks/1
+Authorization: Bearer {{token}}
