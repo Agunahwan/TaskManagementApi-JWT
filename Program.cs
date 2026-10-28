@@ -31,32 +31,23 @@ var jwtIssuer = builder.Configuration["Jwt:Issuer"]
 var jwtAudience = builder.Configuration["Jwt:Audience"]
     ?? throw new InvalidOperationException("JWT audience (Jwt:Audience) is missing.");
 
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.IncludeErrorDetails = true;
-
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine(
-                    $"JWT authentication failed: {context.Exception.Message}");
-
-                return Task.CompletedTask;
-            }
-        };
-
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidIssuer = jwtIssuer,
+
             ValidateAudience = true,
             ValidAudience = jwtAudience,
+
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtKey)),
+
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromSeconds(30)
         };
